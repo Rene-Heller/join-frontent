@@ -1,11 +1,61 @@
 <h1>Add Task</h1>
-<div>
-    <div>
-        <input type="text" placeholder="Enter a title">
-        <textarea type="text" placeholder="Enter a Description"></textarea>
-        <select name="assignees" id="assign-selection">
-            Select contacts to assign
-        </select>
+<div class="absolute w-[900px] inset-0 m-auto h-96 flex">
+    <div class="flex h-full justify-between w-full gap-20">
+        <div class="flex-col flex h-full justify-between w-[45%]">
+            <div class="flex flex-col">
+                <label for="title">Title<span class="text-red">*</span></label>
+                <input type="text" class="border-2 border-tgray rounded-md p-1 outline-lightBlue" placeholder="Enter a title" name="title">
+            </div>
+            <textarea type="text" placeholder="Enter a Description"></textarea>
+            <select name="assignees" id="assign-selection">
+                <option value="" disabled selected hidden>Select contacts to assign</option>
+            </select>
+        </div>
+   
+        <div class="flex-col flex h-full justify-between w-[45%]">
+            <div class="flex flex-col">
+                <label for="title">Due date<span class="text-red">*</span></label>
+                <input type="date" class="border-2 border-tgray rounded-md p-1 outline-lightBlue" placeholder="Enter a title" id="date" name="date">
+            </div>
+            <div>
+                <button (click)="setActive('urgent')" class="rounded-sm border-tgray border-2" [ngClass]="{'bg-white':task.priority!='urgent', 'bg-deepRed':task.priority=='urgent'}">
+                    Urgent
+                </button>
+                <button (click)="setActive('medium')" class="rounded-sm border-tgray border-2" [ngClass]="{'bg-white':task.priority!='medium', 'bg-orange':task.priority=='medium'}">
+                    Medium
+                </button>
+                <button (click)="setActive('low')" class="rounded-sm border-tgray border-2" [ngClass]="{'bg-white':task.priority!='low', 'bg-green':task.priority=='low'}">
+                    Low
+                </button>
+            </div>
+            <select name="category" id="category-selection">
+                <option value="" disabled selected hidden>Select task category</option>
+                <option value="User Story">User Story</option>
+                <option value="Technical Task">Technical Task</option>
+            </select>
+            <div class="flex flex-col">
+                <label for="title">Subtasks</label>
+                <div class="relative">
+                    <input type="text" (focus)="subFocus = true" [(ngModel)]="subText" (blur)="subFocus=false" class="border-2 w-full border-tgray rounded-md p-1 outline-lightBlue focus:cursor-text hover:cursor-pointer" placeholder="Add new subtask" name="title" #subtasks>
+                    @if(subFocus){
+                        <div class="absolute h-4 w-12 right-2 top-0 bottom-0 m-auto flex justify-between items-center">
+                            
+                            <mat-icon (mousedown)="preventFocusChange($event)" (click)="createSubtask()" class=" h-2 w-2 hover:cursor-pointer" aria-hidden="false" aria-label="Example home icon" fontIcon="check"></mat-icon>
+                            |
+                            <mat-icon class=" h-2 w-2 hover:cursor-pointer" aria-hidden="false" aria-label="Example home icon" fontIcon="close"></mat-icon>
+                        </div>
+                    }@else {
+                        <mat-icon class="absolute h-4 w-4 right-2 top-0 bottom-0 m-auto hover:cursor-pointer" aria-hidden="false" aria-label="Example home icon" fontIcon="add"></mat-icon>
+                    }
+                </div>
+                @if(task.subtask.length>0){
+                    @for (item of task.subtask; track $index) {
+                        <div>{{item.description}}</div>
+                    }
+                }
+
+            </div>
+        </div>
     </div>
     <div></div>
 </div>
